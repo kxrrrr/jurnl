@@ -188,7 +188,7 @@ const App: React.FC = () => {
         </div>
         <DialogContent style={{ textAlign: "left" }}>
           <Typography variant="body1" gutterBottom>
-            JURNL is a sleek, minimalist writing tool designed to enhance focus and provide a distraction-free writing experience.
+            JURNL is a sleek, minimalist writing tool for pc designed to enhance focus and provide a distraction-free writing experience.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px" }}>
             The settings icon (top right) will allow you to alter the colour theme, font style and spell check - as well as the ability to export the document.
