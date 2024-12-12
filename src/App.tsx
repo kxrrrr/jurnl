@@ -1,38 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
-import { FiSettings, FiInfo, FiMaximize, FiX, FiMinimize } from "react-icons/fi";
+import { FiInfo, FiMaximize, FiX, FiMinimize, FiDownload, FiMoon, FiSun } from "react-icons/fi";
 import { Dialog, DialogContent, Typography, IconButton, Link } from "@mui/material";
 
 const App: React.FC = () => {
-  const [isFullscreen, setIsFullscreen] = useState(false); //fullscreen
-  const [isInfoOpen, setIsInfoOpen] = useState(false); //info
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false); //settings
-  const [selectedTheme, setSelectedTheme] = useState("light"); //theme
-
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false); // fullscreen state
+  const [isInfoOpen, setIsInfoOpen] = useState<boolean>(false); // info dialog state
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const toggleFullscreen = () => {
     if (!isFullscreen) {
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen();
-      } else if (document.documentElement.mozRequestFullScreen) {
-        document.documentElement.mozRequestFullScreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        document.documentElement.msRequestFullscreen();
       }
+      document.body.classList.add("fullscreen");
       setIsFullscreen(true);
     } else {
       if (document.exitFullscreen) {
         document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
       }
+      document.body.classList.remove("fullscreen");
       setIsFullscreen(false);
     }
   };
@@ -40,75 +27,46 @@ const App: React.FC = () => {
   const handleInfoOpen = () => {
     setIsInfoOpen(true);
     setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus(); // Focus the text area when info opens
-      }
+      textareaRef.current?.focus();
     }, 50);
   };
 
   const handleInfoClose = () => {
     setIsInfoOpen(false);
     setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus(); // Ensure focus on textarea after closing
-      }
-    }, 50); 
+      textareaRef.current?.focus();
+    }, 50);
   };
 
   const handleInfoMinimize = () => {
     setIsInfoOpen(false);
     setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus(); // Ensure focus on textarea after minimizing
-      }
-    }, 50); 
-  };
-
-  const handleSettingsOpen = () => {
-    setIsSettingsOpen(true);
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-      }
+      textareaRef.current?.focus();
     }, 50);
   };
 
-  const handleSettingsClose = () => {
-    setIsSettingsOpen(false);
-    setTimeout(() => {
-      if (textareaRef.current) {
-        textareaRef.current.focus();
-      }
-    }, 50); 
+  const exportContent = () => {
+    const content = textareaRef.current?.value;
+    if (content) {
+      const blob = new Blob([content], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "document.txt";
+      link.click();
+    }
   };
 
-
+ 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
-
-    document.addEventListener("fullscreenchange", () => {
+    textareaRef.current?.focus();
+    const fullscreenChangeHandler = () => {
       setIsFullscreen(document.fullscreenElement !== null);
-    });
-    document.addEventListener("webkitfullscreenchange", () => {
-      setIsFullscreen(document.webkitFullscreenElement !== null);
-    });
-    document.addEventListener("mozfullscreenchange", () => {
-      setIsFullscreen(document.mozFullScreenElement !== null);
-    });
-    document.addEventListener("MSFullscreenChange", () => {
-      setIsFullscreen(document.msFullscreenElement !== null);
-    });
+    };
 
-  
-    setIsInfoOpen(true); 
+    document.addEventListener("fullscreenchange", fullscreenChangeHandler);
 
     return () => {
-      document.removeEventListener("fullscreenchange", () => {});
-      document.removeEventListener("webkitfullscreenchange", () => {});
-      document.removeEventListener("mozfullscreenchange", () => {});
-      document.removeEventListener("MSFullscreenChange", () => {});
+      document.removeEventListener("fullscreenchange", fullscreenChangeHandler);
     };
   }, []);
 
@@ -124,22 +82,24 @@ const App: React.FC = () => {
           {isFullscreen ? <FiMinimize className="icon" /> : <FiMaximize className="icon" />}
         </a>
 
+        {/* Info Button */}
         <a
           href="#"
           title="Info"
-          className={`icon-link ${isInfoOpen ? 'info-hidden' : ''}`}
+          className={`icon-link ${isInfoOpen ? "info-hidden" : ""}`}
           onClick={handleInfoOpen}
         >
           <FiInfo className="icon" />
         </a>
 
+        {/* Export Button */}
         <a
           href="#"
-          title="Settings"
-          className={`icon-link `} //${isSettingsOpen ? 'info-hidden' : ''}
-          onClick={handleSettingsOpen}
+          title="Export"
+          className="icon-link"
+          onClick={exportContent}
         >
-          <FiSettings className="icon" />
+          <FiDownload className="icon" />
         </a>
       </div>
 
@@ -148,55 +108,70 @@ const App: React.FC = () => {
       {/* Info Dialog */}
       <Dialog
         open={isInfoOpen}
-        onClose={(e, reason) => reason === 'backdropClick' ? null : handleInfoClose()} // Prevent closing on backdrop click
+        onClose={(e, reason) =>
+          reason === "backdropClick" ? null : handleInfoClose()
+        }
         maxWidth="sm"
         fullWidth
-        disableBackdropClick 
         PaperProps={{
           sx: {
             backdropFilter: "blur(8px)",
             backgroundColor: "rgba(255, 255, 255, 0.9)",
             borderRadius: "16px",
-            width: "23%",
-            height: "35%",
+            padding: "16px",
             fontWeight: 400,
             textDecoration: "rgb(33, 33, 33)",
             lineHeight: "24px",
             textAlign: "justify",
             fontFamily: "'Montserrat', sans-serif",
             position: "relative",
-            padding: "16px"
-          }
+            width: {
+              xs: "90%",
+              sm: "80%",
+              md: "60%",
+              lg: "25%",
+            },
+            height: {
+              xs: "auto",
+              sm: "auto",
+              md: "auto",
+              lg: "auto",
+            },
+            maxHeight: "90%",
+          },
         }}
       >
         <div className="dialog-header">
           <Typography
             variant="h6"
             className="dialog-title"
-            style={{ textAlign: "left", padding: "8px 16px", borderBottom: "1px solid #ccc" }}
+            style={{
+              textAlign: "left",
+              padding: "8px 16px",
+              borderBottom: "1px solid #ccc",
+            }}
           >
             JURNL
           </Typography>
           <IconButton
             aria-label="close"
-            className="dialog-minimize-button"
             onClick={handleInfoMinimize}
             style={{ position: "absolute", top: 5, right: 5 }}
           >
             <FiX />
           </IconButton>
         </div>
-        <DialogContent style={{ textAlign: "left" }}>
+        <DialogContent style={{ textAlign: "justify", fontFamily: "Montserrat, sans-serif", color: "#858585"}}>
           <Typography variant="body1" gutterBottom>
-            JURNL is a sleek, minimalist writing tool for pc designed to enhance focus and provide a distraction-free writing experience.
+            JURNL is a sleek, minimalist writing tool designed to enhance focus and provide a distraction-free writing experience.
           </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
-            The settings icon (top right) will allow you to alter the colour theme, font style and spell check - as well as the ability to export the document.
+          <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585"}}>
+            The import icon (top right) will give you the ability the ability to export the document.
           </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
+          <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585"}}>
             Your document is automatically saved locally.
           </Typography>
-          <Typography variant="body1" style={{ marginTop: "8px" }}>
+          <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585"}}>
             Built and maintained by{" "}
             <Link
               href="https://github.com/Kxrrrr"
