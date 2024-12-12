@@ -156,7 +156,7 @@ const App: React.FC = () => {
       {/* Info Dialog */}
       <Dialog
         open={isInfoOpen}
-        onClose={(e, reason) =>
+        onClose={(reason) =>
           reason === "backdropClick" ? null : handleInfoClose()
         }
         maxWidth="sm"
