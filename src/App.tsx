@@ -56,19 +56,29 @@ const App: React.FC = () => {
   const toggleSpellCheck = () => {
     setSpellCheckEnabled(!spellCheckEnabled);
     setStatusMessage(`Spell Check ${!spellCheckEnabled ? "Enabled" : "Disabled"}`);
-    setTimeout(() => setStatusMessage(null), 2000); // Clear message after 2 seconds
+    setTimeout(() => setStatusMessage(null), 2000);
   };
 
   const exportContent = () => {
     const content = textareaRef.current?.value;
     if (content) {
       const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
+  
+      link.href = url;
       link.download = "document.txt";
-      link.click();
+
+      const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isiOS) {
+        window.open(url, "_blank");
+      } else {
+        link.click();
+      }
+      URL.revokeObjectURL(url);
     }
   };
+  
 
   useEffect(() => {
     if (textareaRef.current) {
