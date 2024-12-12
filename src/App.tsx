@@ -4,8 +4,8 @@ import { FiInfo, FiMaximize, FiX, FiMinimize, FiDownload } from "react-icons/fi"
 import { Dialog, DialogContent, Typography, IconButton, Link } from "@mui/material";
 
 const App: React.FC = () => {
-  const [isFullscreen, setIsFullscreen] = useState(false); //fullscreen
-  const [isInfoOpen, setIsInfoOpen] = useState(false); //info
+  const [isFullscreen, setIsFullscreen] = useState(false); // fullscreen
+  const [isInfoOpen, setIsInfoOpen] = useState(false); // info
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -70,7 +70,6 @@ const App: React.FC = () => {
       setIsFullscreen(document.fullscreenElement !== null);
     });
 
-
     setIsInfoOpen(true);
 
     return () => {
@@ -113,10 +112,9 @@ const App: React.FC = () => {
       <textarea className="textarea" ref={textareaRef}></textarea>
 
       {/* Info Dialog */}
-      {/* Info Dialog */}
       <Dialog
         open={isInfoOpen}
-        onClose={(e, reason) =>
+        onClose={(reason) =>
           reason === "backdropClick" ? null : handleInfoClose()
         }
         maxWidth="sm"
@@ -174,7 +172,7 @@ const App: React.FC = () => {
             JURNL is a sleek, minimalist writing tool designed to enhance focus and provide a distraction-free writing experience.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585" }}>
-            The import icon (top right) will give you the ability the ability to export the document.
+            The import icon (top right) will give you the ability to export the document.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585" }}>
             Your document is automatically saved locally.
