@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import './app.css';
+import './App.css';
 import { FiInfo, FiMaximize, FiX, FiMinimize, FiDownload } from "react-icons/fi";
 import { Dialog, DialogContent, Typography, IconButton, Link } from "@mui/material";
 import SpellcheckIcon from "@mui/icons-material/Spellcheck";
