@@ -28,8 +28,13 @@ body {
 }
 
 .textarea {
+<<<<<<< HEAD
   width: 50%;
   height: 400px;
+=======
+  width: 60%;
+  height: 70%;
+>>>>>>> 59562b6802a63a8dbbeb9818b84e7186587d2ddf
   background-color: #ffffff;
   color: #000;
   font-size: 24px;
@@ -42,8 +47,55 @@ body {
   cursor: text;
 }
 
+<<<<<<< HEAD
 
 
+=======
+.MuiDialog-paper {
+  backdrop-filter: blur(8px); 
+  background-color: rgba(255, 255, 255, 0.9); 
+  border-radius: 16px; 
+  width: 23%; 
+  height: 35%;
+  
+  font-weight: 400;
+  text-decoration: rgb(33, 33, 33);
+  line-height: 24px;
+  text-align: justify;
+  font-family: "Montserrat", sans-serif; 
+  position: relative;
+  padding: 16px;
+}
+
+
+.dialog-header {
+  position: relative;
+  width: 100%;
+}
+
+.dialog-title {
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: left;
+  margin-bottom: 4px;
+  border-bottom: 2px solid black;
+  font-family: "Montserrat", sans-serif;
+}
+
+.dialog-minimize-button {
+  font-size: 20px;
+  color: #000;
+  cursor: pointer;
+}
+
+.MuiDialogContent-root {
+  text-align: justify, ;
+  font-family: "Montserrat", sans-serif;
+  color: #858585;
+  line-height: 1.6;
+} 
+
+>>>>>>> 59562b6802a63a8dbbeb9818b84e7186587d2ddf
 .info-hidden {
   visibility: hidden;
 }
