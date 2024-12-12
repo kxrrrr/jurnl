@@ -2,10 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import "./App.css";
 import { FiInfo, FiMaximize, FiX, FiMinimize, FiDownload } from "react-icons/fi";
 import { Dialog, DialogContent, Typography, IconButton, Link } from "@mui/material";
+import SpellcheckIcon from "@mui/icons-material/Spellcheck"; // Importing Spellcheck Icon
 
 const App: React.FC = () => {
-  const [isFullscreen, setIsFullscreen] = useState(false); // fullscreen
-  const [isInfoOpen, setIsInfoOpen] = useState(false); // info
+  const [isFullscreen, setIsFullscreen] = useState(false); // Fullscreen
+  const [isInfoOpen, setIsInfoOpen] = useState(false); // Info Dialog
+  const [spellCheckEnabled, setSpellCheckEnabled] = useState(false); // Spell Check
+  const [statusMessage, setStatusMessage] = useState<string | null>(null); // Status Message
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -50,6 +53,12 @@ const App: React.FC = () => {
     }, 50);
   };
 
+  const toggleSpellCheck = () => {
+    setSpellCheckEnabled(!spellCheckEnabled);
+    setStatusMessage(`Spell Check ${!spellCheckEnabled ? "Enabled" : "Disabled"}`);
+    setTimeout(() => setStatusMessage(null), 2000); // Clear message after 2 seconds
+  };
+
   const exportContent = () => {
     const content = textareaRef.current?.value;
     if (content) {
@@ -73,7 +82,7 @@ const App: React.FC = () => {
     setIsInfoOpen(true);
 
     return () => {
-      document.removeEventListener("fullscreenchange", () => { });
+      document.removeEventListener("fullscreenchange", () => {});
     };
   }, []);
 
@@ -92,13 +101,24 @@ const App: React.FC = () => {
         <a
           href="#"
           title="Info"
-          className={`icon-link ${isInfoOpen ? 'info-hidden' : ''}`}
+          className={`icon-link ${isInfoOpen ? "info-hidden" : ""}`}
           onClick={handleInfoOpen}
         >
           <FiInfo className="icon" />
         </a>
 
-        {/* Export Button */}
+        <a
+          href="#"
+          title="Enable/Disable Spell Check"
+          className="icon-link"
+          onClick={toggleSpellCheck}
+        >
+          <SpellcheckIcon
+            className="icon"
+            style={{ color: spellCheckEnabled ? "green" : "inherit" }}
+          />
+        </a>
+
         <a
           href="#"
           title="Export"
@@ -109,12 +129,34 @@ const App: React.FC = () => {
         </a>
       </div>
 
-      <textarea className="textarea" ref={textareaRef}></textarea>
+      <textarea
+        className="textarea"
+        ref={textareaRef}
+        spellCheck={spellCheckEnabled}
+      ></textarea>
+
+      {/* Status Message */}
+      {statusMessage && (
+        <div className="status-message" style={{
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          color: "#fff",
+          padding: "10px 15px",
+          borderRadius: "8px",
+          zIndex: 1000,
+          fontFamily: "'Montserrat', sans-serif",
+          fontSize: "14px",
+        }}>
+          {statusMessage}
+        </div>
+      )}
 
       {/* Info Dialog */}
       <Dialog
         open={isInfoOpen}
-        onClose={(reason) =>
+        onClose={(e, reason) =>
           reason === "backdropClick" ? null : handleInfoClose()
         }
         maxWidth="sm"
@@ -172,10 +214,10 @@ const App: React.FC = () => {
             JURNL is a sleek, minimalist writing tool designed to enhance focus and provide a distraction-free writing experience.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585" }}>
-            The import icon (top right) will give you the ability to export the document.
+            Use the spell check icon (top right) to enable or disable spell check functionality.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585" }}>
-            Your document is automatically saved locally.
+            Use the export icon (top right) to download the the written content in .txt format. Your document is automatically saved locally.
           </Typography>
           <Typography variant="body1" style={{ marginTop: "8px", fontFamily: "Montserrat, sans-serif", color: "#858585" }}>
             Built and maintained by{" "}
