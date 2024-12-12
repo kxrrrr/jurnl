@@ -53,7 +53,6 @@ body {
   cursor: text;
 }
 
-/* Dialog Styles */
 .MuiDialog-paper {
   backdrop-filter: blur(8px); 
   background-color: rgba(255, 255, 255, 0.9); 
@@ -95,7 +94,7 @@ body {
   text-align: justify, ;
   font-family: "Montserrat", sans-serif;
   color: #858585;
-  line-height: 1.6; /* Improve readability */
+  line-height: 1.6;
 } 
 
 .info-hidden {
